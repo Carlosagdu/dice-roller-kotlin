@@ -2,7 +2,7 @@ package com.example.diceroller
 
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 /**
@@ -13,8 +13,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val rollButton: Button = findViewById(R.id.button)
         rollButton.setOnClickListener { rollDice() }
+
+        //Do a roll dice when the app starts
+        rollDice()
     }
 
     /**
@@ -26,21 +30,32 @@ class MainActivity : AppCompatActivity() {
         val dice = Dice(6)
         val diceRoll = dice.roll()
 
-        //Second Dice instance
-        val secondDice = Dice(8)
-        val secondDiceRoll = secondDice.roll()
+        // Reference the dice image
+        val diceImage: ImageView = findViewById(R.id.imageView)
 
-        //Update the screen with the new random number
-        val resultTextView: TextView = findViewById(R.id.textView)
-        resultTextView.text = diceRoll.toString()
+        // Set the image id according to the result
+        val drawableResource = when(diceRoll){
+            1 -> R.drawable.dice_1
+            2 -> R.drawable.dice_2
+            3 -> R.drawable.dice_3
+            4 -> R.drawable.dice_4
+            5 -> R.drawable.dice_5
+            else -> R.drawable.dice_6
+        }
 
-        //Second update
-        val secondTextView: TextView = findViewById(R.id.textView2)
-        secondTextView.text = secondDiceRoll.toString()
+        //set the image resource
+        diceImage.setImageResource(drawableResource)
+
+        //add a content description
+        diceImage.contentDescription = diceRoll.toString()
+
     }
 }
 
+//Dice with a fixed number of sides
 class Dice(private val numSides: Int) {
+
+    // Generate a random number and return it
     fun roll(): Int {
         return (1..numSides).random()
     }
